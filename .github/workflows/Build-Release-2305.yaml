@@ -52,7 +52,7 @@ jobs:
         if [ "${{ matrix.model }}" = "nanopi-r5s" ]; then
           echo "kmod_repo=kmod-aarch64" >> "$GITHUB_ENV"
         elif [ "${{ matrix.model }}" = "x86_64" ]; then
-          echo "kmod_repo=kmod-x86_64" >> "$GITHUB_ENV"
+          echo "kmod_repo=yao-kmod-x86_64" >> "$GITHUB_ENV"
         fi
         
     - name: Free disk space
