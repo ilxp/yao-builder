@@ -6,7 +6,7 @@ jobs:
   build:
     if: github.event.repository.owner.id == github.event.sender.id
     name: Build ${{ matrix.model }}-${{ matrix.tag.version }}
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     defaults:
       run:
         shell: bash
@@ -58,7 +58,7 @@ jobs:
     - name: Free disk space
       run: |
         sudo rm -rf /etc/apt/sources.list.d
-        sudo bash -c "curl -s https://us.cooluc.com/ubuntu-apt/sources-22.04.list > /etc/apt/sources.list"
+        sudo bash -c "curl -s https://us.cooluc.com/ubuntu-apt/sources-24.04.list > /etc/apt/sources.list"
         sudo swapoff -a
         sudo rm -f /swapfile /mnt/swapfile
         sudo docker image prune -a -f
