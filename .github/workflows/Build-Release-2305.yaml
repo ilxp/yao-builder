@@ -1,10 +1,13 @@
 name: Build openwrt-2305
 
 on: workflow_dispatch
+ repository_dispatch:
+    types: [release]
+
  
 jobs:
   build:
-    if: github.event.repository.owner.id == github.event.sender.id
+    #if: github.event.repository.owner.id == github.event.sender.id
     name: Build ${{ matrix.model }}-${{ matrix.tag.version }}
     runs-on: ubuntu-24.04
     defaults:
