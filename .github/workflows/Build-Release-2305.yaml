@@ -164,26 +164,28 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.workflow_token }}
       with:
         files: ${{ env.build_dir }}/rom/*
-        name: OprX_${{ matrix.target.arch }}_${{ matrix.target.kernel }}
+        name: ${{ matrix.target.arch }}-${{ matrix.target.kernel }}
         tag_name: ${{ matrix.target.arch }}
         
-    #- name: Create release
+      #- name: Create release
       #uses: ncipollo/release-action@v1.14.0
       #with:
         #name: OpenWrt-${{ env.latest_release }}
         #allowUpdates: true
         #tag: ${{ env.latest_release }}
-        #commit: main  # 这里必须更改为你仓库的实际分支名称否则固件编译后无法发布到 releases，如：main、master
+        #commit: main # 这里必须更改为你仓库的实际分支名称否则固件编译后无法发布到 releases，如：main、master
         #replacesArtifacts: true
         #token: ${{ secrets.workflow_token }}
-        #artifacts: ${{ env.build_dir }}/rom/*
+        #artifacts: |
+          #${{ env.build_dir }}/rom/*
 
     - name: Release kmods
       if: env.release_kmod == 'true'
-      uses: ncipollo/release-action@v1.14.0
+      #uses: ncipollo/release-action@v1.14.0
+      uses: sbwml/release-action@main
       with:
         #name: OpenWrt-${{ env.latest_release }}
-        name: ${{ matrix.target.arch }}_${{ matrix.target.kernel }}
+        name: ${{ matrix.target.arch }}-${{ matrix.target.kernel }}
         allowUpdates: true
         #tag: ${{ env.latest_release }}
         tag: ${{ matrix.target.arch }}
@@ -192,13 +194,13 @@ jobs:
         token: ${{ secrets.workflow_token }}
         artifacts: ${{ env.build_dir }}/openwrt/*-*.tar.gz
 
-    #- name: Sync kernel modules
-      #if: env.release_kmod == 'true'
-      #uses: peter-evans/repository-dispatch@v3
-      #with:
-        #token: ${{ secrets.workflow_token }}
-        #repository: ilxp/${{ env.kmod_repo }}
-        #event-type: sync
+    - name: Sync kernel modules
+      if: env.release_kmod == 'true'
+      uses: peter-evans/repository-dispatch@v3
+      with:
+        token: ${{ secrets.workflow_token }}
+        repository: ilxp/${{ env.kmod_repo }}
+        event-type: sync
         
     #- name: Release OTA
       #uses: sbwml/FTP-Deploy-Action@master
@@ -209,7 +211,7 @@ jobs:
         #local-dir: ${{ env.WORKDIR }}/openwrt/ota/
         #dangerous-clean-slate: true    
    
-    - name: Release OTA
+    - name: Release OTA/VerMD5
       uses: ncipollo/release-action@v1.14.0
       with:
         name: ${{ matrix.target.arch }}-${{ matrix.target.kernel }}
